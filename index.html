@@ -42,19 +42,25 @@
        </header>
 
               <div class="mb-10 p-4 bg-gray-800 rounded-lg shadow-lg sticky top-4 z-10">
-           <div class="flex flex-col md:flex-row gap-4">
+           <div class="flex flex-col md:flex-row md:items-center gap-4">
                               <div class="relative flex-grow">
                    <input type="text" id="searchInput" placeholder="Pesquisar por título ou autor..." class="w-full bg-gray-700 text-white placeholder-gray-400 rounded-md py-3 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition duration-300">
                    <svg class="w-6 h-6 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
                    </svg>
                </div>
-                              <div id="genreFilters" class="flex items-center flex-wrap gap-2">
-                                  </div>
+                              <div class="relative flex items-center">
+                   <label for="genreFilter" class="sr-only">Filtrar por Gênero</label>
+                   <select id="genreFilter" class="w-full md:w-auto bg-gray-700 text-gray-300 rounded-md py-3 px-4 pr-10 appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-cyan-500 transition duration-300">
+                                          </select>
+                   <svg class="w-5 h-5 text-gray-400 absolute right-3 pointer-events-none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                       <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06L10 12.06l-4.77-4.77a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+                   </svg>
+               </div>
            </div>
        </div>
 
-              <main id="bookGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
+              <main id="bookGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                   </main>
       
               <div id="noResultsMessage" class="hidden text-center py-16">
@@ -66,8 +72,6 @@
 
    <script>
        // --- INÍCIO DA ÁREA DE CONFIGURAÇÃO ---
-       // Você pode adicionar, editar ou remover livros nesta lista.
-       // Basta seguir o mesmo formato de objeto para cada livro.
        const books = [
            {
                id: 1,
@@ -149,88 +153,86 @@
                coverImage: "https://placehold.co/300x450/D97706/FFFFFF?text=Uma+Mente+Brilhante",
                pdfUrl: "#"
            },
-            
-            // --- Novos livros adicionados abaixo ---
-            {
-                id: 11,
-                title: "Orgulho e Preconceito",
-                author: "Jane Austen",
-                genre: "Romance",
-                coverImage: "https://placehold.co/300x450/FCA5A5/FFFFFF?text=Orgulho+e+Preconceito",
-                pdfUrl: "#"
-            },
-            {
-                id: 12,
-                title: "O Iluminado",
-                author: "Stephen King",
-                genre: "Terror",
-                coverImage: "https://placehold.co/300x450/71717A/FFFFFF?text=O+Iluminado",
-                pdfUrl: "#"
-            },
-            {
-                id: 13,
-                title: "Cosmos",
-                author: "Carl Sagan",
-                genre: "Divulgação Científica",
-                coverImage: "https://placehold.co/300x450/0F766E/FFFFFF?text=Cosmos",
-                pdfUrl: "#"
-            },
-            {
-                id: 14,
-                title: "A Revolução dos Bichos",
-                author: "George Orwell",
-                genre: "Fábula",
-                coverImage: "https://placehold.co/300x450/BEF264/FFFFFF?text=A+Revolu%C3%A7%C3%A3o+dos+Bichos",
-                pdfUrl: "#"
-            },
-            {
-                id: 15,
-                title: "O Diário de Anne Frank",
-                author: "Anne Frank",
-                genre: "Biográfico",
-                coverImage: "https://placehold.co/300x450/5EEAD4/FFFFFF?text=Di%C3%A1rio+de+Anne+Frank",
-                pdfUrl: "#"
-            },
-            {
-                id: 16,
-                title: "Cem Anos de Solidão",
-                author: "Gabriel García Márquez",
-                genre: "Realismo Mágico",
-                coverImage: "https://placehold.co/300x450/C084FC/FFFFFF?text=Cem+Anos+de+Solid%C3%A3o",
-                pdfUrl: "#"
-            },
-            {
-                id: 17,
-                title: "O Pequeno Príncipe",
-                author: "Antoine de Saint-Exupéry",
-                genre: "Infantil",
-                coverImage: "https://placehold.co/300x450/A7F3D0/FFFFFF?text=O+Pequeno+Pr%C3%ADncipe",
-                pdfUrl: "#"
-            },
-            {
-                id: 18,
-                title: "O Apanhador no Campo de Centeio",
-                author: "J.D. Salinger",
-                genre: "Clássico",
-                coverImage: "https://placehold.co/300x450/9CA3AF/FFFFFF?text=O+Apanhador",
-                pdfUrl: "#"
-            },
-            {
-                id: 19,
-                title: "O Nome do Vento",
-                author: "Patrick Rothfuss",
-                genre: "Fantasia",
-                coverImage: "https://placehold.co/300x450/0891B2/FFFFFF?text=O+Nome+do+Vento",
-                pdfUrl: "#"
-            },
-            {
-                id: 20,
-                title: "A menina que roubava livros",
-                author: "Markus Zusak",
-                genre: "Drama",
-                coverImage: "https://placehold.co/300x450/6EE7B7/FFFFFF?text=A+menina+que+roubava+livros",
-                pdfUrl: "#"
-            }
+           {
+               id: 11,
+               title: "Orgulho e Preconceito",
+               author: "Jane Austen",
+               genre: "Romance",
+               coverImage: "https://placehold.co/300x450/FCA5A5/FFFFFF?text=Orgulho+e+Preconceito",
+               pdfUrl: "#"
+           },
+           {
+               id: 12,
+               title: "O Iluminado",
+               author: "Stephen King",
+               genre: "Terror",
+               coverImage: "https://placehold.co/300x450/71717A/FFFFFF?text=O+Iluminado",
+               pdfUrl: "#"
+           },
+           {
+               id: 13,
+               title: "Cosmos",
+               author: "Carl Sagan",
+               genre: "Divulgação Científica",
+               coverImage: "https://placehold.co/300x450/0F766E/FFFFFF?text=Cosmos",
+               pdfUrl: "#"
+           },
+           {
+               id: 14,
+               title: "A Revolução dos Bichos",
+               author: "George Orwell",
+               genre: "Fábula",
+               coverImage: "https://placehold.co/300x450/BEF264/FFFFFF?text=A+Revolu%C3%A7%C3%A3o+dos+Bichos",
+               pdfUrl: "#"
+           },
+           {
+               id: 15,
+               title: "O Diário de Anne Frank",
+               author: "Anne Frank",
+               genre: "Biográfico",
+               coverImage: "https://placehold.co/300x450/5EEAD4/FFFFFF?text=Di%C3%A1rio+de+Anne+Frank",
+               pdfUrl: "#"
+           },
+           {
+               id: 16,
+               title: "Cem Anos de Solidão",
+               author: "Gabriel García Márquez",
+               genre: "Realismo Mágico",
+               coverImage: "https://placehold.co/300x450/C084FC/FFFFFF?text=Cem+Anos+de+Solid%C3%A3o",
+               pdfUrl: "#"
+           },
+           {
+               id: 17,
+               title: "O Pequeno Príncipe",
+               author: "Antoine de Saint-Exupéry",
+               genre: "Infantil",
+               coverImage: "https://placehold.co/300x450/A7F3D0/FFFFFF?text=O+Pequeno+Pr%C3%ADncipe",
+               pdfUrl: "#"
+           },
+           {
+               id: 18,
+               title: "O Apanhador no Campo de Centeio",
+               author: "J.D. Salinger",
+               genre: "Clássico",
+               coverImage: "https://placehold.co/300x450/9CA3AF/FFFFFF?text=O+Apanhador",
+               pdfUrl: "#"
+           },
+           {
+               id: 19,
+               title: "O Nome do Vento",
+               author: "Patrick Rothfuss",
+               genre: "Fantasia",
+               coverImage: "https://placehold.co/300x450/0891B2/FFFFFF?text=O+Nome+do+Vento",
+               pdfUrl: "#"
+           },
+           {
+               id: 20,
+               title: "A menina que roubava livros",
+               author: "Markus Zusak",
+               genre: "Drama",
+               coverImage: "https://placehold.co/300x450/6EE7B7/FFFFFF?text=A+menina+que+roubava+livros",
+               pdfUrl: "#"
+           }
        ];
        // --- FIM DA ÁREA DE CONFIGURAÇÃO ---
 
@@ -238,7 +240,7 @@
        // Selecionando os elementos do HTML que vamos manipular
        const bookGrid = document.getElementById('bookGrid');
        const searchInput = document.getElementById('searchInput');
-       const genreFiltersContainer = document.getElementById('genreFilters');
+       const genreFilterSelect = document.getElementById('genreFilter');
        const noResultsMessage = document.getElementById('noResultsMessage');
 
        // Variáveis para guardar o estado atual dos filtros
@@ -280,53 +282,23 @@
        }
       
        /**
-        * Função para criar e renderizar os botões de filtro de gênero.
+        * Função para criar e renderizar as opções do dropdown de gênero.
         */
-       function renderGenreFilters() {
+       function renderGenreFilterOptions() {
            // Extrai todos os gêneros únicos da lista de livros
            const genres = ['Todos', ...new Set(books.map(book => book.genre))];
-          
+           
            genres.forEach(genre => {
-               const button = document.createElement('button');
-               button.textContent = genre;
-               button.dataset.genre = genre; // Atributo para identificar o gênero
-              
-               // Estilo base do botão
-               button.className = 'px-4 py-2 text-sm font-medium rounded-md transition-colors duration-300';
-              
-               // Estilo do botão ativo vs inativo
-               if (genre === currentGenre) {
-                   button.classList.add('bg-cyan-500', 'text-white');
-               } else {
-                   button.classList.add('bg-gray-700', 'text-gray-300', 'hover:bg-gray-600');
+               const option = document.createElement('option');
+               option.textContent = genre;
+               option.value = genre;
+               if (genre === 'Todos') {
+                   option.selected = true;
                }
-
-               // Adiciona o evento de clique para filtrar por gênero
-               button.addEventListener('click', () => {
-                   currentGenre = genre;
-                   updateDisplay();
-                   updateActiveGenreButton();
-               });
-
-               genreFiltersContainer.appendChild(button);
+               genreFilterSelect.appendChild(option);
            });
        }
       
-       /**
-        * Função para atualizar o estilo do botão de gênero ativo.
-        */
-       function updateActiveGenreButton() {
-           const buttons = genreFiltersContainer.querySelectorAll('button');
-           buttons.forEach(button => {
-               button.classList.remove('bg-cyan-500', 'text-white');
-               button.classList.add('bg-gray-700', 'text-gray-300', 'hover:bg-gray-600');
-               if (button.dataset.genre === currentGenre) {
-                   button.classList.remove('bg-gray-700', 'text-gray-300', 'hover:bg-gray-600');
-                   button.classList.add('bg-cyan-500', 'text-white');
-               }
-           });
-       }
-
        /**
         * Função central que filtra os livros com base na pesquisa e no gênero selecionado.
         */
@@ -351,15 +323,20 @@
            renderBooks(filteredBooks);
        }
 
-       // Adiciona o evento de 'input' para a barra de pesquisa
+       // Adiciona os eventos para a barra de pesquisa e o dropdown de gênero
        searchInput.addEventListener('input', (e) => {
            currentSearchTerm = e.target.value;
            updateDisplay();
        });
 
+       genreFilterSelect.addEventListener('change', (e) => {
+           currentGenre = e.target.value;
+           updateDisplay();
+       });
+
        // Função que é executada quando a página termina de carregar
        document.addEventListener('DOMContentLoaded', () => {
-           renderGenreFilters();
+           renderGenreFilterOptions();
            updateDisplay(); // Renderiza todos os livros inicialmente
        });
 
