@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+       <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -52,7 +52,7 @@
                 <div class="relative flex items-center">
                     <label for="genreFilter" class="sr-only">Filtrar por Gênero</label>
                     <select id="genreFilter" class="w-full md:w-auto bg-gray-700 text-gray-300 rounded-md py-3 px-4 pr-10 appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-cyan-500 transition duration-300">
-                        </select>
+                    </select>
                     <svg class="w-5 h-5 text-gray-400 absolute right-3 pointer-events-none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                         <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06L10 12.06l-4.77-4.77a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
                     </svg>
@@ -61,8 +61,8 @@
         </div>
 
         <main id="bookGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
-            </main>
-      
+        </main>
+    
         <div id="noResultsMessage" class="hidden text-center py-16">
             <h2 class="text-2xl font-semibold text-gray-500">Nenhum livro encontrado</h2>
             <p class="text-gray-400 mt-2">Tente ajustar sua pesquisa ou filtro de gênero.</p>
@@ -232,9 +232,146 @@
                 genre: "Drama",
                 coverImage: "https://placehold.co/300x450/6EE7B7/FFFFFF?text=A+menina+que+roubava+livros",
                 pdfUrl: "#"
+            },
+            // --- INÍCIO DOS NOVOS LIVROS ---
+            {
+                id: 21,
+                title: "Berserk",
+                author: "Kentaro Miura",
+                genre: "Fantasia",
+                coverImage: "https://placehold.co/300x450/1F2937/FFFFFF?text=Berserk",
+                pdfUrl: "https://cdn.bookey.app/files/pdf/book/pt/berserk-volume-1.pdf"
+            },
+            {
+                id: 22,
+                title: "É Assim que Acaba",
+                author: "Colleen Hoover",
+                genre: "Romance",
+                coverImage: "https://placehold.co/300x450/1F2937/FFFFFF?text=%C3%89+Assim+que+Acaba",
+                pdfUrl: "https://101livros.com/wp-content/uploads/2022/03/E-Assim-que-Acaba-E-Assim-que-Acaba-1-Colleen-Hoover.pdf"
+            },
+            {
+                id: 23,
+                title: "Dom Casmurro",
+                author: "Machado de Assis",
+                genre: "Romance",
+                coverImage: "https://placehold.co/300x450/1F2937/FFFFFF?text=Dom+Casmurro",
+                pdfUrl: "https://ddcus.org/pdf/summer_reading/11th_grade/Dom_Casmurro-Machado_de_Assis.pdf"
+            },
+            {
+                id: 24,
+                title: "A hora da estrela",
+                author: "Clarisse Lispector",
+                genre: "Romance",
+                coverImage: "https://placehold.co/300x450/1F2937/FFFFFF?text=A+hora+da+estrela",
+                pdfUrl: "https://www.assisprofessor.com.br/documentos/livros/Clarice%20Lispector%20-%20A%20Hora%20da%20Estrela.pdf"
+            },
+            {
+                id: 25,
+                title: "Memórias póstumas brás Cuba",
+                author: "Machado de Assis",
+                genre: "Romance",
+                coverImage: "https://placehold.co/300x450/1F2937/FFFFFF?text=Mem%C3%B3rias+p%C3%B3stumas+br%C3%A1s+Cuba",
+                pdfUrl: "https://murilo-gotardo.github.io/biblioteca-ifc-videira/img/pdfs/memoriasBras.pdf"
+            },
+            {
+                id: 26,
+                title: "A Guerra dos mundos",
+                author: "H. G. Wells",
+                genre: "Ficção Científica",
+                coverImage: "https://placehold.co/300x450/1F2937/FFFFFF?text=A+Guerra+dos+mundos",
+                pdfUrl: "https://www.uel.br/pessoal/jneto/gradua/historia/recdida/GuerradosMundosJNETO.pdf"
+            },
+            {
+                id: 27,
+                title: "Ainda Estou Aqui",
+                author: "Marcelo Rubens Paiva",
+                genre: "Biográfico",
+                coverImage: "https://placehold.co/300x450/1F2937/FFFFFF?text=Ainda+Estou+Aqui",
+                pdfUrl: "https://drive.google.com/file/d/171Yg9vkzYmX32COgpKo65wmJ6Qq0oVZW/view"
+            },
+            {
+                id: 28,
+                title: "O suicídio",
+                author: "Emile Durkheim",
+                genre: "Sociologia",
+                coverImage: "https://placehold.co/300x450/1F2937/FFFFFF?text=O+suic%C3%ADdio",
+                pdfUrl: "https://pedropeixotoferreira.wordpress.com/wp-content/uploads/2015/02/durkheim_2000_o-suicidio_bookmfontes.pdf"
+            },
+            {
+                id: 29,
+                title: "Harry Potter e a Pedra Filosofal",
+                author: "J. K. Rowling",
+                genre: "Fantasia",
+                coverImage: "https://placehold.co/300x450/1F2937/FFFFFF?text=Harry+Potter",
+                pdfUrl: "https://static.tumblr.com/kvvdpco/ZNXm8ij2e/j.k._rowling_-_1_-_harry_potter_e_a_pedra_filosofal.pdf"
+            },
+            {
+                id: 30,
+                title: "Coraline",
+                author: "Neil Gaiman",
+                genre: "Fantasia",
+                coverImage: "https://placehold.co/300x450/1F2937/FFFFFF?text=Coraline",
+                pdfUrl: "https://drive.google.com/file/d/1Q4WvPnLxZemN6gvt3LcJZ9poJUtEDdcu/view"
+            },
+            {
+                id: 31,
+                title: "Fahrenheit 451",
+                author: "Ray Bradbury",
+                genre: "Ficção Científica",
+                coverImage: "https://placehold.co/300x450/1F2937/FFFFFF?text=Fahrenheit+451",
+                pdfUrl: "https://letrasufpr.wordpress.com/wp-content/uploads/2016/08/fahrenheit-451-ray-bradbury.pdf"
+            },
+            {
+                id: 32,
+                title: "Turma da Monica Jovem",
+                author: "Mauricio de Souza",
+                genre: "HQs",
+                coverImage: "https://placehold.co/300x450/1F2937/FFFFFF?text=Turma+da+M%C3%B4nica",
+                pdfUrl: "https://agendadasbugigangas.wordpress.com/wp-content/uploads/2011/05/turma-da-monica-jovem-nc2ba-29.pdf"
+            },
+            {
+                id: 33,
+                title: "O Suicídio - Émile Durkheim",
+                author: "Émile Durkheim",
+                genre: "Sociologia",
+                coverImage: "https://placehold.co/300x450/1F2937/FFFFFF?text=O+Suic%C3%ADdio",
+                pdfUrl: "https://pedropeixotoferreira.wordpress.com/wp-content/uploads/2015/02/durkheim_2000_o-suicidio_bookmfontes.pdf"
+            },
+            {
+                id: 34,
+                title: "Harry Potter e as Relíquias da Morte",
+                author: "J.K. Rowling",
+                genre: "Fantasia Juvenil",
+                coverImage: "https://placehold.co/300x450/1F2937/FFFFFF?text=Harry+Potter",
+                pdfUrl: "https://mail.elginbematech.com.br/processobook/Book%20Bematech%20Fev-2020/Bematech/Leitura%20Online/Livros/86-%20Harry%20Potter%20e%20as%20Reliquias%20da%20%20Morte.pdf"
+            },
+            {
+                id: 35,
+                title: "Ps. Eu te amo",
+                author: "Cecelia Ahern",
+                genre: "Romance",
+                coverImage: "https://placehold.co/300x450/1F2937/FFFFFF?text=Ps.+Eu+te+amo",
+                pdfUrl: "https://static.tumblr.com/cehnl2g/tzhmlq0d3/cecelia_ahern_-_p.s._eu_te_amo__1_.pdf"
+            },
+            {
+                id: 36,
+                title: "O Pequeno Príncipe",
+                author: "Antoine de Saint-Exupéry",
+                genre: "Fábula",
+                coverImage: "https://placehold.co/300x450/1F2937/FFFFFF?text=O+Pequeno+Pr%C3%ADncipe",
+                pdfUrl: "https://drive.google.com/file/d/1i517gNv2bRGchdjT4OZQofEqtl5JLuPn/view"
+            },
+            {
+                id: 37,
+                title: "O senhor dos Anéis: O retorno do rei",
+                author: "J. R. R. Tolkien",
+                genre: "Fantasia",
+                coverImage: "https://placehold.co/300x450/1F2937/FFFFFF?text=O+retorno+do+rei",
+                pdfUrl: "https://drive.google.com/file/d/16SEtMmcWc3pEXo4nhff-2BQlCQgJREm4/view?usp=drive_link"
             }
+            // --- FIM DA ÁREA DE CONFIGURAÇÃO ---
         ];
-        // --- FIM DA ÁREA DE CONFIGURAÇÃO ---
 
 
         // Selecionando os elementos do HTML que vamos manipular
@@ -262,7 +399,7 @@
             } else {
                 bookGrid.classList.remove('hidden');
                 noResultsMessage.classList.add('hidden');
-              
+            
                 booksToRender.forEach(book => {
                     const bookCard = `
                         <a href="${book.pdfUrl}" target="_blank" class="group block bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-cyan-500/50 transition-all duration-300 transform hover:-translate-y-2">
@@ -280,14 +417,14 @@
                 });
             }
         }
-      
+    
         /**
          * Função para criar e renderizar as opções do dropdown de gênero.
          */
         function renderGenreFilterOptions() {
             // Extrai todos os gêneros únicos da lista de livros
             const genres = ['Todos', ...new Set(books.map(book => book.genre))];
-            
+        
             genres.forEach(genre => {
                 const option = document.createElement('option');
                 option.textContent = genre;
@@ -298,7 +435,7 @@
                 genreFilterSelect.appendChild(option);
             });
         }
-      
+    
         /**
          * Função central que filtra os livros com base na pesquisa e no gênero selecionado.
          */
