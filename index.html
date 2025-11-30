@@ -1,493 +1,508 @@
-       <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Biblioteca Digital</title>
+    <title>Biblioteca Digital - Social</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Estilo base para usar a fonte Inter */
         body {
             font-family: 'Inter', sans-serif;
+            background-image: url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?q=80&w=2690&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            min-height: 100vh;
         }
-        /* Efeito de scroll suave */
-        html {
-            scroll-behavior: smooth;
+
+        .bg-overlay {
+            background-color: rgba(17, 24, 39, 0.85);
+            min-height: 100vh;
+            width: 100%;
         }
-        /* Estilo para a barra de rolagem */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #1f2937;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #4b5563;
-            border-radius: 10px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #6b7280;
-        }
+
+        html { scroll-behavior: smooth; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #111827; }
+        ::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+        .book-cover { aspect-ratio: 2/3; object-fit: cover; }
+        .hidden-section { display: none !important; }
+        .fade-in { animation: fadeIn 0.5s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* Estilo para as estrelas interativas */
+        .star-rating { direction: rtl; display: inline-flex; }
+        .star-rating input { display: none; }
+        .star-rating label { color: #4b5563; font-size: 2rem; padding: 0; cursor: pointer; transition: color 0.2s; }
+        .star-rating label:hover,
+        .star-rating label:hover ~ label,
+        .star-rating input:checked ~ label { color: #fbbf24; } 
     </style>
 </head>
-<body class="bg-gray-900 text-white">
+<body class="text-white">
 
-    <div class="container mx-auto px-4 py-8">
-        <header class="text-center mb-12">
-            <h1 class="text-4xl md:text-5xl font-bold text-cyan-400 mb-2">Minha Biblioteca Digital</h1>
-            <p class="text-lg text-gray-400">Explore, pesquise e leia seus livros favoritos.</p>
-        </header>
-
-        <div class="mb-10 p-4 bg-gray-800 rounded-lg shadow-lg sticky top-4 z-10">
-            <div class="flex flex-col md:flex-row md:items-center gap-4">
-                <div class="relative flex-grow">
-                    <input type="text" id="searchInput" placeholder="Pesquisar por título ou autor..." class="w-full bg-gray-700 text-white placeholder-gray-400 rounded-md py-3 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition duration-300">
-                    <svg class="w-6 h-6 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+    <div class="bg-overlay flex flex-col min-h-screen relative">
+        
+        <div id="loginScreen" class="flex flex-col items-center justify-center flex-grow w-full px-4 fade-in">
+            <div class="bg-gray-800/90 backdrop-blur-md p-8 rounded-2xl shadow-2xl border border-gray-700 w-full max-w-md text-center">
+                <div class="mb-6">
+                    <svg class="w-16 h-16 text-cyan-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
                     </svg>
+                    <h2 class="text-3xl font-bold text-white mb-2">Acesso à Biblioteca</h2>
+                    <p class="text-gray-400 text-sm">Digite seu RA para continuar.</p>
                 </div>
-                <div class="relative flex items-center">
-                    <label for="genreFilter" class="sr-only">Filtrar por Gênero</label>
-                    <select id="genreFilter" class="w-full md:w-auto bg-gray-700 text-gray-300 rounded-md py-3 px-4 pr-10 appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-cyan-500 transition duration-300">
-                    </select>
-                    <svg class="w-5 h-5 text-gray-400 absolute right-3 pointer-events-none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                        <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06L10 12.06l-4.77-4.77a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
-                    </svg>
+
+                <div class="space-y-4">
+                    <div class="relative">
+                        <input type="text" id="raInput" maxlength="13" placeholder="Ex: 0001234567890" 
+                            class="w-full bg-gray-700 text-white placeholder-gray-500 rounded-lg py-3 px-4 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition border border-gray-600 text-center tracking-widest text-lg">
+                    </div>
+                    
+                    <button id="loginBtn" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3 px-4 rounded-lg transition duration-300 transform hover:scale-[1.02] shadow-lg">
+                        Entrar
+                    </button>
+                    
+                    <p id="loginError" class="hidden text-red-400 text-sm font-medium mt-2 bg-red-900/30 p-2 rounded border border-red-800">
+                        RA Inválido. O RA deve ter 13 dígitos, começar com "000" e os demais dígitos entre 1-9.
+                    </p>
                 </div>
             </div>
         </div>
 
-        <main id="bookGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
-        </main>
-    
-        <div id="noResultsMessage" class="hidden text-center py-16">
-            <h2 class="text-2xl font-semibold text-gray-500">Nenhum livro encontrado</h2>
-            <p class="text-gray-400 mt-2">Tente ajustar sua pesquisa ou filtro de gênero.</p>
+        <div id="libraryContent" class="hidden-section container mx-auto px-4 py-8 max-w-7xl flex-grow fade-in">
+            <header class="text-center mb-12 relative">
+                <div class="absolute right-0 top-0 flex flex-col items-end">
+                    <p id="userWelcome" class="text-sm text-cyan-200 font-mono mb-2"></p>
+                    <button id="logoutBtn" class="text-xs bg-gray-700 hover:bg-red-600/80 text-white px-3 py-1 rounded transition border border-gray-600">
+                        Sair
+                    </button>
+                </div>
+                <h1 class="text-4xl md:text-5xl font-extrabold text-cyan-400 mb-2 drop-shadow-lg">Minha Biblioteca Social</h1>
+                <p class="text-lg text-gray-300 drop-shadow-md">Leia, avalie e discuta livros com outros estudantes.</p>
+            </header>
+
+            <div class="mb-10 p-4 bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-2xl sticky top-4 z-10 border border-gray-700">
+                <div class="flex flex-col md:flex-row md:items-center gap-4">
+                    <div class="relative flex-grow">
+                        <input type="text" id="searchInput" placeholder="Pesquisar por título ou autor..." class="w-full bg-gray-700 text-white placeholder-gray-400 rounded-lg py-3 pl-10 pr-12 focus:outline-none focus:ring-4 focus:ring-cyan-500/50 transition duration-300 shadow-inner">
+                        <svg class="w-6 h-6 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                        </svg>
+                        <button id="clearSearchBtn" class="hidden absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-red-400 focus:outline-none p-1 rounded-full bg-gray-700/50">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                        </button>
+                    </div>
+
+                    <div class="relative flex items-center md:w-1/4">
+                        <select id="genreFilter" class="w-full md:w-auto bg-gray-700 text-gray-200 rounded-lg py-3 px-4 pr-10 appearance-none cursor-pointer focus:outline-none focus:ring-4 focus:ring-cyan-500/50 transition duration-300 shadow-inner">
+                        </select>
+                        <svg class="w-5 h-5 text-gray-400 absolute right-3 pointer-events-none" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06L10 12.06l-4.77-4.77a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <main id="bookGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6 sm:gap-8">
+            </main>
+        
+            <div id="noResultsMessage" class="hidden text-center py-16 bg-gray-800/80 rounded-xl">
+                <h2 class="text-3xl font-bold text-gray-500 mb-2">Ops!</h2>
+                <p class="text-gray-400 mt-2">Nenhum livro encontrado.</p>
+            </div>
+        </div>
+
+        <div id="bookModal" class="hidden-section fixed inset-0 z-50 flex items-center justify-center p-4">
+            <div class="absolute inset-0 bg-black/90 backdrop-blur-sm" onclick="closeModal()"></div>
+            
+            <div class="relative bg-gray-800 rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto shadow-2xl border border-gray-700 flex flex-col md:flex-row">
+                <button onclick="closeModal()" class="absolute right-4 top-4 text-gray-400 hover:text-white z-10 p-2 bg-gray-900/50 rounded-full">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+
+                <div class="md:w-1/3 p-6 flex flex-col items-center bg-gray-900/50">
+                    <img id="modalBookImage" src="" alt="Capa" class="w-48 rounded shadow-lg mb-6 book-cover">
+                    <a id="modalBookLink" href="#" target="_blank" class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-3 px-4 rounded-lg text-center transition flex items-center justify-center gap-2 shadow-lg mb-4">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                        Ler Livro (PDF)
+                    </a>
+                </div>
+
+                <div class="md:w-2/3 p-6 md:p-8">
+                    <div class="mb-6 border-b border-gray-700 pb-4">
+                        <h2 id="modalBookTitle" class="text-3xl font-bold text-white mb-2">Titulo</h2>
+                        <p id="modalBookAuthor" class="text-xl text-cyan-400 mb-2">Autor</p>
+                        <span id="modalBookGenre" class="text-xs font-semibold text-gray-300 bg-gray-700 px-2 py-1 rounded">Gênero</span>
+                    </div>
+
+                    <div class="bg-gray-700/30 p-4 rounded-xl mb-6 border border-gray-600">
+                        <h3 class="font-bold text-gray-200 mb-3">Deixe sua avaliação</h3>
+                        <div class="flex flex-col gap-3">
+                            <div class="star-rating self-start" id="starRatingInput">
+                                <input type="radio" id="star5" name="rating" value="5" /><label for="star5" title="5 estrelas">★</label>
+                                <input type="radio" id="star4" name="rating" value="4" /><label for="star4" title="4 estrelas">★</label>
+                                <input type="radio" id="star3" name="rating" value="3" /><label for="star3" title="3 estrelas">★</label>
+                                <input type="radio" id="star2" name="rating" value="2" /><label for="star2" title="2 estrelas">★</label>
+                                <input type="radio" id="star1" name="rating" value="1" /><label for="star1" title="1 estrela">★</label>
+                            </div>
+                            <textarea id="commentInput" rows="2" placeholder="O que você achou deste livro?" class="w-full bg-gray-800 text-white rounded p-3 text-sm focus:ring-2 focus:ring-cyan-500 outline-none border border-gray-600 resize-none"></textarea>
+                            <button onclick="submitReview()" class="self-end bg-cyan-600 hover:bg-cyan-500 text-white px-4 py-2 rounded text-sm font-semibold transition">Publicar Comentário</button>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3 class="font-bold text-gray-200 mb-4 flex items-center gap-2">
+                            Comentários da Comunidade
+                            <span id="commentCount" class="bg-gray-700 text-xs px-2 py-0.5 rounded-full text-gray-300">0</span>
+                        </h3>
+                        <div id="commentsList" class="space-y-4 max-h-60 overflow-y-auto pr-2 custom-scrollbar">
+                            </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
     </div>
 
     <script>
-        // --- INÍCIO DA ÁREA DE CONFIGURAÇÃO ---
-        const books = [
-            {
-                id: 1,
-                title: "A sutil arte de ligar o foda-se",
-                author: "Mark Manson",
-                genre: "Auto ajuda",
-                coverImage: "https://m.media-amazon.com/images/I/6175IU0qFgL._SL1000_.jpg",
-                pdfUrl: "https://drive.google.com/file/d/1j7_17M4OckBQ6KOydEs3WqzNAZYqhRNt/view?usp=drive_link"
-            },
-            {
-                id: 2,
-                title: "Duna",
-                author: "Frank Herbert",
-                genre: "Ficção Científica",
-                coverImage: "https://m.media-amazon.com/images/I/81zN7udGRUL._SL1500_.jpg",
-                pdfUrl: "https://dagobah.com.br/wp-content/uploads/2022/08/100-DIAS-Duna.pdf"
-            },
-            {
-                id: 3,
-                title: "O Hobbit",
-                author: "J.R.R. Tolkien",
-                genre: "Fantasia",
-                coverImage: "https://m.media-amazon.com/images/I/91M9xPIf10L._SL1500_.jpg",
-                pdfUrl: "https://drive.google.com/file/d/1lhtULK8COssKZT2glmbJ_2S2pHksgiHU/view?usp=drive_link"
-            },
-            {
-                id: 4,
-                title: "A Guerra dos Tronos",
-                author: "George R. R. Martin",
-                genre: "Fantasia",
-                coverImage: "https://m.media-amazon.com/images/I/91+1SUO3vUL._SL1500_.jpg",
-                pdfUrl: "https://drive.google.com/file/d/1cASGTEq1r6srr_s63InA36_64NO2RzAd/view?usp=drive_link"
-            },
-            {
-                id: 5,
-                title: "O Assassinato no Expresso do Oriente",
-                author: "Agatha Christie",
-                genre: "Mistério",
-                coverImage: "https://m.media-amazon.com/images/I/81Zp6MFxIDL._SL1500_.jpg",
-                pdfUrl: "https://bibliopedra.wordpress.com/wp-content/uploads/2015/09/assassinato-no-expresso-do-oriente.pdf"
-            },
-            {
-                id: 6,
-                title: "O Código Da Vinci",
-                author: "Dan Brown",
-                genre: "Mistério",
-                coverImage: "https://m.media-amazon.com/images/I/416lvPCh0cL._SY445_SX342_.jpg",
-                pdfUrl: "https://www.museusdepernambuco.pe.gov.br/files/space/2234/149-o-codigo-da-vinci-dan-brown.pdf"
-            },
-            {
-                id: 7,
-                title: "Sapiens: Uma Breve História da Humanidade",
-                author: "Yuval Noah Harari",
-                genre: "Não Ficção",
-                coverImage: "https://m.media-amazon.com/images/I/41FU42ESk5L._SY445_SX342_.jpg",
-                pdfUrl: "https://maurooliveira.blog/wp-content/uploads/2019/12/pdf-sapiens-uma-breve-hsitc3b3ria-da-humanidade.pdf"
-            },
-            {
-                id: 8,
-                title: "1984",
-                author: "George Orwell",
-                genre: "Ficção Científica",
-                coverImage: "https://m.media-amazon.com/images/I/51VXYaKO-sL._SY445_SX342_.jpg",
-                pdfUrl: "https://multimidia.gazetadopovo.com.br/media/info/2022/202209/1984/e-book-1984.pdf"
-            },
-            {
-                id: 9,
-                title: "O Senhor dos Anéis sociedade do anél",
-                author: "J.R.R. Tolkien",
-                genre: "Fantasia",
-                coverImage: "https://m.media-amazon.com/images/I/81hCVEC0ExL._SL1500_.jpg",
-                pdfUrl: "https://agendadasbugigangas.wordpress.com/wp-content/uploads/2011/05/o-senhor-dos-anc3a9is-a-sociedade-do-anel.pdf"
-            },
-            {
-                id: 10,
-                title: "Uma Mente Brilhante",
-                author: "Sylvia Nasar",
-                genre: "Não Ficção",
-                coverImage: "https://m.media-amazon.com/images/I/A15C4NGBKrL._SL1500_.jpg",
-                pdfUrl: "https://cdn.bookey.app/files/pdf/book/pt/uma-mente-brilhante.pdf"
-            },
-            {
-                id: 11,
-                title: "Orgulho e Preconceito",
-                author: "Jane Austen",
-                genre: "Romance",
-                coverImage: "https://m.media-amazon.com/images/I/51lC3sHYyML._SY445_SX342_.jpg",
-                pdfUrl: "https://reciclaleitores.com.br/wp-content/uploads/2020/10/ORGULHO-E-PRECONCEITO-Austen-Jane.pdf"
-            },
-            {
-                id: 12,
-                title: "O Iluminado",
-                author: "Stephen King",
-                genre: "Terror",
-                coverImage: "https://www.stephenking.com.br/wp-content/uploads/2011/11/nova-cultural.jpg",
-                pdfUrl: "https://www.eecarvalhosenne.com.br/wp-content/uploads/2020/10/O-iluminado-Stephen-King.pdf"
-            },
-            {
-                id: 13,
-                title: "Cosmos",
-                author: "Carl Sagan",
-                genre: "Divulgação Científica",
-                coverImage: "https://m.media-amazon.com/images/I/71zVhbnKmfL._SL1500_.jpg",
-                pdfUrl: "https://ia601200.us.archive.org/11/items/cosmos_de_carl_sagan/cosmos_de_carl_sagan.pdf"
-            },
-            {
-                id: 14,
-                title: "A Revolução dos Bichos",
-                author: "George Orwell",
-                genre: "Fábula",
-                coverImage: "https://m.media-amazon.com/images/I/514Dv-LqaQL._SY445_SX342_.jpg",
-                pdfUrl: "https://multimidia.gazetadopovo.com.br/media/info/2021/202110/bichos/revolucao-dos-bichos.pdf"
-            },
-            {
-                id: 15,
-                title: "O Diário de Anne Frank",
-                author: "Anne Frank",
-                genre: "Biográfico",
-                coverImage: "https://m.media-amazon.com/images/I/512UR+rt83L._SY445_SX342_.jpg",
-                pdfUrl: "https://diegodelpasso.com/wp-content/uploads/2016/05/o-dic3a1rio-de-anne-frank.pdf"
-            },
-            {
-                id: 16,
-                title: "Cem Anos de Solidão",
-                author: "Gabriel García Márquez",
-                genre: "Realismo Mágico",
-                coverImage: "https://m.media-amazon.com/images/I/511NRhFHZbL._SY445_SX342_.jpg",
-                pdfUrl: "https://iedamagri.wordpress.com/wp-content/uploads/2014/07/gabriel_garcia_marquez_-_100_anos_de_solidao1.pdf"
-            },
-            {
-                id: 17,
-                title: "O chamado de cthulhu ",
-                author: "H.P Lovecraft",
-                genre: "Terror",
-                coverImage: "https://m.media-amazon.com/images/I/51t-2xkikXL._SY445_SX342_.jpg",
-                pdfUrl: "http://www.filosofianerd.com.br/pdf/lovecraft_chamado_cthulhu.pdf"
-            },
-            {
-                id: 18,
-                title: "O Apanhador no Campo de Centeio",
-                author: "J.D. Salinger",
-                genre: "Clássico",
-                coverImage: "https://m.media-amazon.com/images/I/71b3GDZMzSL._SL1229_.jpg",
-                pdfUrl: "https://bibliopedra.wordpress.com/wp-content/uploads/2015/09/apanhador-no-campo-de-centeio-o-jerome-david-salinger.pdf"
-            },
-            {
-                id: 19,
-                title: "O Nome do Vento",
-                author: "Patrick Rothfuss",
-                genre: "Fantasia",
-                coverImage: "https://m.media-amazon.com/images/I/51VaihnlMrL._SY445_SX342_.jpg",
-                pdfUrl: "https://cdn.bookey.app/files/pdf/book/pt/o-nome-do-vento.pdf"
-            },
-            {
-                id: 20,
-                title: "A menina que roubava livros",
-                author: "Markus Zusak",
-                genre: "Drama",
-                coverImage: "https://m.media-amazon.com/images/I/41pVlY-bbaL._SY445_SX342_.jpg",
-                pdfUrl: "https://docs.google.com/file/d/0BxnyD0AkGuejVWhRRDhCblNHQm8/edit?resourcekey=0-d9St1_DH1yXLOODADYHvqA"
-            },
-            // --- INÍCIO DOS NOVOS LIVROS ---
-            {
-                id: 21,
-                title: "Berserk",
-                author: "Kentaro Miura",
-                genre: "Fantasia",
-                coverImage: "https://m.media-amazon.com/images/I/91rdTtLWAHL._SL1500_.jpg",
-                pdfUrl: "https://cdn.bookey.app/files/pdf/book/pt/berserk-volume-1.pdf"
-            },
-            {
-                id: 22,
-                title: "É Assim que Acaba",
-                author: "Colleen Hoover",
-                genre: "Romance",
-                coverImage: "https://m.media-amazon.com/images/I/91r5G8RxqfL._SL1500_.jpg",
-                pdfUrl: "https://101livros.com/wp-content/uploads/2022/03/E-Assim-que-Acaba-E-Assim-que-Acaba-1-Colleen-Hoover.pdf"
-            },
-            {
-                id: 23,
-                title: "Dom Casmurro",
-                author: "Machado de Assis",
-                genre: "Romance",
-                coverImage: "https://m.media-amazon.com/images/I/61Z2bMhGicL._SL1360_.jpg",
-                pdfUrl: "https://ddcus.org/pdf/summer_reading/11th_grade/Dom_Casmurro-Machado_de_Assis.pdf"
-            },
-            {
-                id: 24,
-                title: "A hora da estrela",
-                author: "Clarisse Lispector",
-                genre: "Romance",
-                coverImage: "https://m.media-amazon.com/images/I/51nM4WcjNrL._SY445_SX342_.jpg",
-                pdfUrl: "https://www.assisprofessor.com.br/documentos/livros/Clarice%20Lispector%20-%20A%20Hora%20da%20Estrela.pdf"
-            },
-            {
-                id: 25,
-                title: "Memórias póstumas brás Cuba",
-                author: "Machado de Assis",
-                genre: "Romance",
-                coverImage: "https://m.media-amazon.com/images/I/815u+SBDpJL._SL1500_.jpg",
-                pdfUrl: "https://murilo-gotardo.github.io/biblioteca-ifc-videira/img/pdfs/memoriasBras.pdf"
-            },
-            {
-                id: 26,
-                title: "A Guerra dos mundos",
-                author: "H. G. Wells",
-                genre: "Ficção Científica",
-                coverImage: "https://m.media-amazon.com/images/I/91r3rBPFgcS._SL1500_.jpg",
-                pdfUrl: "https://www.uel.br/pessoal/jneto/gradua/historia/recdida/GuerradosMundosJNETO.pdf"
-            },
-            {
-                id: 27,
-                title: "Ainda Estou Aqui",
-                author: "Marcelo Rubens Paiva",
-                genre: "Biográfico",
-                coverImage: "https://m.media-amazon.com/images/I/41qGJ9aSNWL._SY445_SX342_.jpg",
-                pdfUrl: "https://drive.google.com/file/d/171Yg9vkzYmX32COgpKo65wmJ6Qq0oVZW/view"
-            },
-            {
-                id: 28,
-                title: "O suicídio",
-                author: "Emile Durkheim",
-                genre: "Sociologia",
-                coverImage: "https://m.media-amazon.com/images/I/71JPGWHAUiL._SL1500_.jpg",
-                pdfUrl: "https://pedropeixotoferreira.wordpress.com/wp-content/uploads/2015/02/durkheim_2000_o-suicidio_bookmfontes.pdf"
-            },
-            {
-                id: 29,
-                title: "Harry Potter e a Pedra Filosofal",
-                author: "J. K. Rowling",
-                genre: "Fantasia Juvenil",
-                coverImage: "https://m.media-amazon.com/images/I/81ibfYk4qmL._SL1500_.jpg",
-                pdfUrl: "https://static.tumblr.com/kvvdpco/ZNXm8ij2e/j.k._rowling_-_1_-_harry_potter_e_a_pedra_filosofal.pdf"
-            },
-            {
-                id: 30,
-                title: "Coraline",
-                author: "Neil Gaiman",
-                genre: "Fantasia",
-                coverImage: "https://m.media-amazon.com/images/I/818565mPygL._SL1500_.jpg",
-                pdfUrl: "https://drive.google.com/file/d/1Q4WvPnLxZemN6gvt3LcJZ9poJUtEDdcu/view"
-            },
-            {
-                id: 31,
-                title: "Fahrenheit 451",
-                author: "Ray Bradbury",
-                genre: "Ficção Científica",
-                coverImage: "https://m.media-amazon.com/images/I/51tAD6LyZ-L.jpg",
-                pdfUrl: "https://letrasufpr.wordpress.com/wp-content/uploads/2016/08/fahrenheit-451-ray-bradbury.pdf"
-            },
-            {
-                id: 32,
-                title: "Turma da Monica Jovem",
-                author: "Mauricio de Souza",
-                genre: "HQs",
-                coverImage: "https://m.media-amazon.com/images/I/61M9LFihkIL._UF1000,1000_QL80_.jpg",
-                pdfUrl: "https://agendadasbugigangas.wordpress.com/wp-content/uploads/2011/05/turma-da-monica-jovem-nc2ba-29.pdf"
-            },
-            {
-                id: 33,
-                title: "senhor dos anéis as duas torres",
-                author: "J.R.R Tolkien",
-                genre: "Fantasia",
-                coverImage: "https://m.media-amazon.com/images/I/81lQ5N0QwJL._SL1500_.jpg",
-                pdfUrl: "https://www.planetadelivros.pt/libros_contenido_extra/47/46735_1_as_duas_torres_1cap.pdf"
-            },
-            {
-                id: 34,
-                title: "Harry Potter e as Relíquias da Morte",
-                author: "J.K. Rowling",
-                genre: "Fantasia Juvenil",
-                coverImage: "https://m.media-amazon.com/images/I/81PHloIwKnL.jpg",
-                pdfUrl: "https://mail.elginbematech.com.br/processobook/Book%20Bematech%20Fev-2020/Bematech/Leitura%20Online/Livros/86-%20Harry%20Potter%20e%20as%20Reliquias%20da%20%20Morte.pdf"
-            },
-            {
-                id: 35,
-                title: "Ps. Eu te amo",
-                author: "Cecelia Ahern",
-                genre: "Romance",
-                coverImage: "https://m.media-amazon.com/images/I/51++cSUFfoL._SY445_SX342_.jpg",
-                pdfUrl: "https://static.tumblr.com/cehnl2g/tzhmlq0d3/cecelia_ahern_-_p.s._eu_te_amo__1_.pdf"
-            },
-            {
-                id: 36,
-                title: "O Pequeno Príncipe",
-                author: "Antoine de Saint-Exupéry",
-                genre: "Fábula",
-                coverImage: "https://m.media-amazon.com/images/I/41afCn3PQUL._SY445_SX342_.jpg",
-                pdfUrl: "https://drive.google.com/file/d/1i517gNv2bRGchdjT4OZQofEqtl5JLuPn/view"
-            },
-            {
-                id: 37,
-                title: "O senhor dos Anéis: O retorno do rei",
-                author: "J. R. R. Tolkien",
-                genre: "Fantasia",
-                coverImage: "https://m.media-amazon.com/images/I/71+4uDgt8JL._SL1500_.jpg",
-                pdfUrl: "https://drive.google.com/file/d/16SEtMmcWc3pEXo4nhff-2BQlCQgJREm4/view?usp=drive_link"
+        // --- GERENCIAMENTO DE ESTADO E DADOS ---
+        let currentRA = null;
+        let currentBookId = null;
+
+        // Recupera avaliações do LocalStorage ou inicia vazio
+        // Estrutura: { "bookId_1": [ {ra, text, rating, date}, ... ], "bookId_2": ... }
+        let libraryReviews = JSON.parse(localStorage.getItem('libraryReviews')) || {};
+
+        // --- LÓGICA DE LOGIN ---
+        const loginScreen = document.getElementById('loginScreen');
+        const libraryContent = document.getElementById('libraryContent');
+        const raInput = document.getElementById('raInput');
+        const loginError = document.getElementById('loginError');
+        const userWelcome = document.getElementById('userWelcome');
+
+        function validateRA(ra) {
+            // Regra: Começa com 000, seguido por 10 dígitos (1-9), total 13
+            const regex = /^000[1-9]{10}$/;
+            return regex.test(ra);
+        }
+
+        function handleLogin() {
+            const ra = raInput.value.trim();
+            if (validateRA(ra)) {
+                currentRA = ra;
+                loginError.classList.add('hidden');
+                loginScreen.classList.add('hidden-section');
+                libraryContent.classList.remove('hidden-section');
+                // Mostra o RA mascarado no topo
+                userWelcome.innerText = `Olá, Estudante ${ra.slice(-4)}`;
+                updateDisplay(); // Recarrega os livros para mostrar médias atualizadas
+            } else {
+                loginError.classList.remove('hidden');
+                raInput.classList.add('ring-2', 'ring-red-500');
+                setTimeout(() => raInput.classList.remove('ring-2', 'ring-red-500'), 500);
             }
-            // --- FIM DA ÁREA DE CONFIGURAÇÃO ---
+        }
+
+        document.getElementById('loginBtn').addEventListener('click', handleLogin);
+        raInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleLogin(); });
+        document.getElementById('logoutBtn').addEventListener('click', () => location.reload()); // Recarrega para "deslogar"
+
+        // --- DADOS DOS LIVROS (Mantidos) ---
+        const books = [
+            { id: 1, title: "A sutil arte de ligar o foda-se", author: "Mark Manson", genre: "Auto ajuda", coverImage: "https://m.media-amazon.com/images/I/6175IU0qFgL._SL1000_.jpg", pdfUrl: "https://drive.google.com/file/d/1j7_17M4OckBQ6KOydEs3WqzNAZYqhRNt/view?usp=drive_link" },
+            { id: 2, title: "Duna", author: "Frank Herbert", genre: "Ficção Científica", coverImage: "https://m.media-amazon.com/images/I/81zN7udGRUL._SL1500_.jpg", pdfUrl: "https://dagobah.com.br/wp-content/uploads/2022/08/100-DIAS-Duna.pdf" },
+            { id: 3, title: "O Hobbit", author: "J.R.R. Tolkien", genre: "Fantasia", coverImage: "https://m.media-amazon.com/images/I/91M9xPIf10L._SL1500_.jpg", pdfUrl: "https://drive.google.com/file/d/1lhtULK8COssKZT2glmbJ_2S2pHksgiHU/view?usp=drive_link" },
+            { id: 4, title: "A Guerra dos Tronos", author: "George R. R. Martin", genre: "Fantasia", coverImage: "https://m.media-amazon.com/images/I/91+1SUO3vUL._SL1500_.jpg", pdfUrl: "https://drive.google.com/file/d/1cASGTEq1r6srr_s63InA36_64NO2RzAd/view?usp=drive_link" },
+            { id: 5, title: "O Assassinato no Expresso do Oriente", author: "Agatha Christie", genre: "Mistério", coverImage: "https://m.media-amazon.com/images/I/81Zp6MFxIDL._SL1500_.jpg", pdfUrl: "https://bibliopedra.wordpress.com/wp-content/uploads/2015/09/assassinato-no-expresso-do-oriente.pdf" },
+            { id: 6, title: "O Código Da Vinci", author: "Dan Brown", genre: "Mistério", coverImage: "https://m.media-amazon.com/images/I/416lvPCh0cL._SY445_SX342_.jpg", pdfUrl: "https://www.museusdepernambuco.pe.gov.br/files/space/2234/149-o-codigo-da-vinci-dan-brown.pdf" },
+            { id: 7, title: "Sapiens: Uma Breve História da Humanidade", author: "Yuval Noah Harari", genre: "Não Ficção", coverImage: "https://m.media-amazon.com/images/I/41FU42ESk5L._SY445_SX342_.jpg", pdfUrl: "https://maurooliveira.blog/wp-content/uploads/2019/12/pdf-sapiens-uma-breve-hsitc3b3ria-da-humanidade.pdf" },
+            { id: 8, title: "1984", author: "George Orwell", genre: "Ficção Científica", coverImage: "https://m.media-amazon.com/images/I/51VXYaKO-sL._SY445_SX342_.jpg", pdfUrl: "https://multimidia.gazetadopovo.com.br/media/info/2022/202209/1984/e-book-1984.pdf" },
+            { id: 9, title: "O Senhor dos Anéis: A Sociedade do Anel", author: "J.R.R. Tolkien", genre: "Fantasia", coverImage: "https://m.media-amazon.com/images/I/81hCVEC0ExL._SL1500_.jpg", pdfUrl: "https://agendadasbugigangas.wordpress.com/wp-content/uploads/2011/05/o-senhor-dos-anc3a9is-a-sociedade-do-anel.pdf" },
+            { id: 10, title: "Uma Mente Brilhante", author: "Sylvia Nasar", genre: "Não Ficção", coverImage: "https://m.media-amazon.com/images/I/A15C4NGBKrL._SL1500_.jpg", pdfUrl: "https://cdn.bookey.app/files/pdf/book/pt/uma-mente-brilhante.pdf" },
+            { id: 11, title: "Orgulho e Preconceito", author: "Jane Austen", genre: "Romance", coverImage: "https://m.media-amazon.com/images/I/51lC3sHYyML._SY445_SX342_.jpg", pdfUrl: "https://reciclaleitores.com.br/wp-content/uploads/2020/10/ORGULHO-E-PRECONCEITO-Austen-Jane.pdf" },
+            { id: 12, title: "O Iluminado", author: "Stephen King", genre: "Terror", coverImage: "https://www.stephenking.com.br/wp-content/uploads/2011/11/nova-cultural.jpg", pdfUrl: "https://www.eecarvalhosenne.com.br/wp-content/uploads/2020/10/O-iluminado-Stephen-King.pdf" },
+            { id: 13, title: "Cosmos", author: "Carl Sagan", genre: "Divulgação Científica", coverImage: "https://m.media-amazon.com/images/I/71zVhbnKmfL._SL1500_.jpg", pdfUrl: "https://ia601200.us.archive.org/11/items/cosmos_de_carl_sagan/cosmos_de_carl_sagan.pdf" },
+            { id: 14, title: "A Revolução dos Bichos", author: "George Orwell", genre: "Fábula", coverImage: "https://m.media-amazon.com/images/I/514Dv-LqaQL._SY445_SX342_.jpg", pdfUrl: "https://multimidia.gazetadopovo.com.br/media/info/2021/202110/bichos/revolucao-dos-bichos.pdf" },
+            { id: 15, title: "O Diário de Anne Frank", author: "Anne Frank", genre: "Biográfico", coverImage: "https://m.media-amazon.com/images/I/512UR+rt83L._SY445_SX342_.jpg", pdfUrl: "https://diegodelpasso.com/wp-content/uploads/2016/05/o-dic3a1rio-de-anne-frank.pdf" },
+            { id: 16, title: "Cem Anos de Solidão", author: "Gabriel García Márquez", genre: "Realismo Mágico", coverImage: "https://m.media-amazon.com/images/I/511NRhFHZbL._SY445_SX342_.jpg", pdfUrl: "https://iedamagri.wordpress.com/wp-content/uploads/2014/07/gabriel_garcia_marquez_-_100_anos_de_solidao1.pdf" },
+            { id: 17, title: "O Chamado de Cthulhu", author: "H.P Lovecraft", genre: "Terror", coverImage: "https://m.media-amazon.com/images/I/51t-2xkikXL._SY445_SX342_.jpg", pdfUrl: "http://www.filosofianerd.com.br/pdf/lovecraft_chamado_cthulhu.pdf" },
+            { id: 18, title: "O Apanhador no Campo de Centeio", author: "J.D. Salinger", genre: "Clássico", coverImage: "https://m.media-amazon.com/images/I/71b3GDZMzSL._SL1229_.jpg", pdfUrl: "https://bibliopedra.wordpress.com/wp-content/uploads/2015/09/apanhador-no-campo-de-centeio-o-jerome-david-salinger.pdf" },
+            { id: 19, title: "O Nome do Vento", author: "Patrick Rothfuss", genre: "Fantasia", coverImage: "https://m.media-amazon.com/images/I/51VaihnlMrL._SY445_SX342_.jpg", pdfUrl: "https://cdn.bookey.app/files/pdf/book/pt/o-nome-do-vento.pdf" },
+            { id: 20, title: "A Menina que Roubava Livros", author: "Markus Zusak", genre: "Drama", coverImage: "https://m.media-amazon.com/images/I/41pVlY-bbaL._SY445_SX342_.jpg", pdfUrl: "https://docs.google.com/file/d/0BxnyD0AkGuejVWhRRDhCblNHQm8/edit?resourcekey=0-d9St1_DH1yXLOODADYHvqA" },
+            { id: 21, title: "Berserk", author: "Kentaro Miura", genre: "Fantasia", coverImage: "https://m.media-amazon.com/images/I/91rdTtLWAHL._SL1500_.jpg", pdfUrl: "https://cdn.bookey.app/files/pdf/book/pt/berserk-volume-1.pdf" },
+            { id: 22, title: "É Assim que Acaba", author: "Colleen Hoover", genre: "Romance", coverImage: "https://m.media-amazon.com/images/I/91r5G8RxqfL._SL1500_.jpg", pdfUrl: "https://101livros.com/wp-content/uploads/2022/03/E-Assim-que-Acaba-E-Assim-que-Acaba-1-Colleen-Hoover.pdf" },
+            { id: 23, title: "Dom Casmurro", author: "Machado de Assis", genre: "Romance", coverImage: "https://m.media-amazon.com/images/I/61Z2bMhGicL._SL1360_.jpg", pdfUrl: "https://ddcus.org/pdf/summer_reading/11th_grade/Dom_Casmurro-Machado_de_Assis.pdf" },
+            { id: 24, title: "A Hora da Estrela", author: "Clarisse Lispector", genre: "Romance", coverImage: "https://m.media-amazon.com/images/I/51nM4WcjNrL._SY445_SX342_.jpg", pdfUrl: "https://www.assisprofessor.com.br/documentos/livros/Clarice%20Lispector%20-%20A%20Hora%20da%20Estrela.pdf" },
+            { id: 25, title: "Memórias Póstumas de Brás Cubas", author: "Machado de Assis", genre: "Romance", coverImage: "https://m.media-amazon.com/images/I/815u+SBDpJL._SL1500_.jpg", pdfUrl: "https://murilo-gotardo.github.io/biblioteca-ifc-videira/img/pdfs/memoriasBras.pdf" },
+            { id: 26, title: "A Guerra dos Mundos", author: "H. G. Wells", genre: "Ficção Científica", coverImage: "https://m.media-amazon.com/images/I/91r3rBPFgcS._SL1500_.jpg", pdfUrl: "https://www.uel.br/pessoal/jneto/gradua/historia/recdida/GuerradosMundosJNETO.pdf" },
+            { id: 27, title: "Ainda Estou Aqui", author: "Marcelo Rubens Paiva", genre: "Biográfico", coverImage: "https://m.media-amazon.com/images/I/41qGJ9aSNWL._SY445_SX342_.jpg", pdfUrl: "https://drive.google.com/file/d/171Yg9vkzYmX32COgpKo65wmJ6Qq0oVZW/view" },
+            { id: 28, title: "O Suicídio", author: "Emile Durkheim", genre: "Sociologia", coverImage: "https://m.media-amazon.com/images/I/71JPGWHAUiL._SL1500_.jpg", pdfUrl: "https://pedropeixotoferreira.wordpress.com/wp-content/uploads/2015/02/durkheim_2000_o-suicidio_bookmfontes.pdf" },
+            { id: 29, title: "Harry Potter e a Pedra Filosofal", author: "J. K. Rowling", genre: "Fantasia Juvenil", coverImage: "https://m.media-amazon.com/images/I/81ibfYk4qmL._SL1500_.jpg", pdfUrl: "https://static.tumblr.com/kvvdpco/ZNXm8ij2e/j.k._rowling_-_1_-_harry_potter_e_a_pedra_filosofal.pdf" },
+            { id: 30, title: "Coraline", author: "Neil Gaiman", genre: "Fantasia", coverImage: "https://m.media-amazon.com/images/I/818565mPygL._SL1500_.jpg", pdfUrl: "https://drive.google.com/file/d/1Q4WvPnLxZemN6gvt3LcJZ9poJUtEDdcu/view" },
+            { id: 31, title: "Fahrenheit 451", author: "Ray Bradbury", genre: "Ficção Científica", coverImage: "https://m.media-amazon.com/images/I/51tAD6LyZ-L.jpg", pdfUrl: "https://letrasufpr.wordpress.com/wp-content/uploads/2016/08/fahrenheit-451-ray-bradbury.pdf" },
+            { id: 32, title: "Turma da Monica Jovem", author: "Mauricio de Souza", genre: "HQs", coverImage: "https://m.media-amazon.com/images/I/61M9LFihkIL._UF1000,1000_QL80_.jpg", pdfUrl: "https://agendadasbugigangas.wordpress.com/wp-content/uploads/2011/05/turma-da-monica-jovem-nc2ba-29.pdf" },
+            { id: 33, title: "O Senhor dos Anéis: As Duas Torres", author: "J.R.R Tolkien", genre: "Fantasia", coverImage: "https://m.media-amazon.com/images/I/81lQ5N0QwJL._SL1500_.jpg", pdfUrl: "https://www.planetadelivros.pt/libros_contenido_extra/47/46735_1_as_duas_torres_1cap.pdf" },
+            { id: 34, title: "Harry Potter e as Relíquias da Morte", author: "J.K. Rowling", genre: "Fantasia Juvenil", coverImage: "https://m.media-amazon.com/images/I/81PHloIwKnL.jpg", pdfUrl: "https://mail.elginbematech.com.br/processobook/Book%20Bematech%20Fev-2020/Bematech/Leitura%20Online/Livros/86-%20Harry%20Potter%20e%20as%20Reliquias%20da%20%20Morte.pdf" },
+            { id: 35, title: "Ps. Eu te amo", author: "Cecelia Ahern", genre: "Romance", coverImage: "https://m.media-amazon.com/images/I/51++cSUFfoL._SY445_SX342_.jpg", pdfUrl: "https://static.tumblr.com/cehnl2g/tzhmlq0d3/cecelia_ahern_-_p.s._eu_te_amo__1_.pdf" },
+            { id: 36, title: "O Pequeno Príncipe", author: "Antoine de Saint-Exupéry", genre: "Fábula", coverImage: "https://m.media-amazon.com/images/I/41afCn3PQUL._SY445_SX342_.jpg", pdfUrl: "https://drive.google.com/file/d/1i517gNv2bRGchdjT4OZQofEqtl5JLuPn/view" },
+            { id: 37, title: "O senhor dos Anéis: O retorno do rei", author: "J. R. R. Tolkien", genre: "Fantasia", coverImage: "https://m.media-amazon.com/images/I/71+4uDgt8JL._SL1500_.jpg", pdfUrl: "https://drive.google.com/file/d/16SEtMmcWc3pEXo4nhff-2BQlCQgJREm4/view?usp=drive_link" },
+            { id: 38, title: "Viagem ao Centro da Terra", author: "Júlio Verne", genre: "Ficção Científica", coverImage: "https://cdn.kobo.com/book-images/28265f50-af95-4971-aafd-ea381ed59465/353/569/90/False/viagem-ao-centro-da-terra-2.jpg", pdfUrl: "https://daffy.ufs.br/uploads/page_attach/path/7865/LEITURA_1_CI_NCIAS_7ANO.pdf" },
+            { id: 39, title: "Crônicas de Nárnia: O Leão...", author: "C.S. Lewis", genre: "Fantasia Juvenil", coverImage: "https://cdn.kobo.com/book-images/063c72fd-3231-438a-85ab-47e464bf6d6d/353/569/90/False/as-cronicas-de-narnia-colecao-de-luxo-o-leao-a-feiticeira-e-o-guarda-roupa.jpg", pdfUrl: "https://itaudeminas.mg.gov.br/arquivos/ere/livros/o-Leao-a-feiticeira-e-o-guarda-roupa.pdf" },
+            { id: 40, title: "Crime e Castigo", author: "Fiódor Dostoiévski", genre: "Clássico", coverImage: "https://livrariapublica.com.br/capa/crime-e-castigo-classicos-da-literatura-mundial-fiodor-dostoievski-pdf-B08HRCW1RM.webp", pdfUrl: "https://felipebmansur.wordpress.com/wp-content/uploads/2020/03/dostoievski-fiodor_crime-e-castigo-ed.-34.pdf" },
+            { id: 41, title: "A Paciente Silenciosa", author: "Alex Michaelides", genre: "Thriller", coverImage: "https://livrariapublica.com.br/capa/a-paciente-silenciosa-alex-michaelides-pdf-B07NLKFWGY.webp", pdfUrl: "https://osaberdigital.com.br/wp-content/uploads/2025/02/A-Paciente-Silenciosa-Alex-Michaelides.pdf" },
+            { id: 42, title: "O Mundo de Sofia", author: "Jostein Gaarder", genre: "Filosofia", coverImage: "https://livrariapublica.com.br/capa/o-mundo-de-sofia-romance-da-historia-da-filosofia-jostein-pdf-B00AC0ZIFA.webp", pdfUrl: "https://cabana-on.com/Ler/wp-content/uploads/2017/08/O-Mundo-de-Sofia-Jostein-Gaarder.pdf" },
+            { id: 43, title: "A Estrada", author: "Cormac McCarthy", genre: "Drama", coverImage: "https://m.media-amazon.com/images/I/71M3+3F-4XL._SL1360_.jpg", pdfUrl: "https://notamanuscrita.com/wp-content/uploads/2015/07/mccarthy-a-estrada.pdf" },
+            { id: 44, title: "Neuromancer", author: "William Gibson", genre: "Ficção Científica", coverImage: "https://m.media-amazon.com/images/I/91Bm-0Vk1XL._SL1500_.jpg", pdfUrl: "#" },
+            { id: 45, title: "A Arte da Guerra", author: "Sun Tzu", genre: "Não Ficção", coverImage: "https://m.media-amazon.com/images/I/61M6K5iT0XL._SL1360_.jpg", pdfUrl: "https://biblioteca.unisced.edu.mz/bitstream/123456789/1872/1/A%20ARTE%20DA%20GUERRA%20-%20ok.pdf" },
+            { id: 46, title: "O Conde de Monte Cristo", author: "Alexandre Dumas", genre: "Clássico", coverImage: "https://m.media-amazon.com/images/I/81Z5h0+H7IL._SL1500_.jpg", pdfUrl: "https://www.ufmg.br/centrocultural/wp-content/uploads/2020/05/3-O-Conde-de-Monte-Cristo-Alexandre-Dumas-1_compressed1.pdf" },
+            { id: 47, title: "O Labirinto do Fauno", author: "Guillermo del Toro", genre: "Fantasia", coverImage: "https://m.media-amazon.com/images/I/91tUo+8oW3L._SL1500_.jpg", pdfUrl: "https://www.intrinseca.com.br/upload/livros/1%C2%BACAP_OLabirintoDeFauno.pdf" },
+            { id: 48, title: "Garota Exemplar", author: "Gillian Flynn", genre: "Thriller", coverImage: "https://m.media-amazon.com/images/I/71uK-k-I4LL._SL1500_.jpg", pdfUrl: "https://static.tumblr.com/amm1lw6/qAlmltxdn/garota_exemplar_-_gillian_flynn.pdf" },
+            { id: 49, title: "O Poder do Hábito", author: "Charles Duhigg", genre: "Auto ajuda", coverImage: "https://m.media-amazon.com/images/I/81N6W2+G4WL._SL1500_.jpg", pdfUrl: "https://files.cercomp.ufg.br/weby/up/58/o/O_poder_do_Ha%CC%81bito.pdf.pdf" },
+            { id: 50, title: "Admirável Mundo Novo", author: "Aldous Huxley", genre: "Ficção Científica", coverImage: "https://m.media-amazon.com/images/I/81H+pZ+1e+L._SL1500_.jpg", pdfUrl: "https://cesarmangolin.wordpress.com/wp-content/uploads/2010/08/aldous-huxley-admiravel-mundo-novo.pdf" },
+            { id: 51, title: "Os Miseráveis", author: "Victor Hugo", genre: "Clássico", coverImage: "https://m.media-amazon.com/images/I/71N-d+XvGXL._SL1500_.jpg", pdfUrl: "https://www.assisprofessor.com.br/documentos/livros/Os_Miseraveis_Victor_Hugo.pdf" },
+            { id: 52, title: "A Casa dos Espíritos", author: "Isabel Allende", genre: "Realismo Mágico", coverImage: "https://m.media-amazon.com/images/I/81w3O5k+H1L._SL1500_.jpg", pdfUrl: "https://cdn.bookey.app/files/pdf/book/pt/a-casa-dos-esp%C3%ADritos.pdf" },
+            { id: 53, title: "Frankenstein", author: "Mary Shelley", genre: "Terror", coverImage: "https://m.media-amazon.com/images/I/61z+d0I4CLL._SL1360_.jpg", pdfUrl: "https://drive.google.com/drive/folders/1ehWno7i0HTXHITcARHwi97EdADdjLN8b" },
+            { id: 54, title: "O Retrato de Dorian Gray", author: "Oscar Wilde", genre: "Clássico", coverImage: "https://m.media-amazon.com/images/I/91d+W5eFm+L._SL1500_.jpg", pdfUrl: "https://www.jaimemoniz.com/images/docs/recursos/Oscar-Wilde-livro.pdf" },
+            { id: 55, title: "Flores para Algernon", author: "Daniel Keyes", genre: "Ficção Científica", coverImage: "https://m.media-amazon.com/images/I/81+21gQx3hL._SL1500_.jpg", pdfUrl: "https://www.laad.com.br/wp-content/uploads/2021/09/Flores-para-algernon.pdf" },
+            { id: 56, title: "Mulherzinhas", author: "Louisa May Alcott", genre: "Romance", coverImage: "https://m.media-amazon.com/images/I/91JmC6b-Q+L._SL1500_.jpg", pdfUrl: "https://osaberdigital.com.br/wp-content/uploads/2024/07/Mulherzinhas-Louisa-May-Alcott.pdf" },
+            { id: 57, title: "O Vendedor de Sonhos", author: "Augusto Cury", genre: "Auto ajuda", coverImage: "https://m.media-amazon.com/images/I/61j+5v1L+XL._SL1360_.jpg", pdfUrl: "https://drive.google.com/drive/folders/1ehWno7i0HTXHITcARHwi97EdADdjLN8b" },
+            { id: 58, title: "A Metamorfose", author: "Franz Kafka", genre: "Clássico", coverImage: "https://m.media-amazon.com/images/I/713v+M0+1XL._SL1360_.jpg", pdfUrl: "https://mojo.org.br/wp-content/uploads/2024/08/006-A-metamorfose-978-65-89008-23-1.pdf" },
+            { id: 59, title: "O Sol é para Todos", author: "Harper Lee", genre: "Drama", coverImage: "https://m.media-amazon.com/images/I/81QdE4S-sXL._SL1500_.jpg", pdfUrl: "https://cdn.bookey.app/files/pdf/book/pt/o-sol-%C3%A9-para-todos.pdf" },
+            { id: 60, title: "Guia do Mochileiro das Galáxias", author: "Douglas Adams", genre: "Ficção Científica", coverImage: "https://m.media-amazon.com/images/I/81eM0+D8+YL._SL1500_.jpg", pdfUrl: "https://assimsimpliciter.wordpress.com/wp-content/uploads/2015/11/douglas-adams-o-mochileiro-das-galaxias-volume-unico.pdf" },
+            { id: 61, title: "A Cor Púrpura", author: "Alice Walker", genre: "Drama", coverImage: "https://m.media-amazon.com/images/I/81x1+2L+3UL.jpg", pdfUrl: "https://www.eecarvalhosenne.com.br/wp-content/uploads/2020/10/SUGESTAO-DE-LEITURA-2.pdf" },
+            { id: 62, title: "Em Busca do Tempo Perdido", author: "Marcel Proust", genre: "Clássico", coverImage: "https://m.media-amazon.com/images/I/61+D6q+5+LL.jpg", pdfUrl: "https://estdaliteratura.wordpress.com/wp-content/uploads/2017/05/lf-4-em-busca-do-tempo-perdido-marcel-proust.pdf" },
+            { id: 63, title: "O Pássaro que Gira a Chave", author: "Haruki Murakami", genre: "Fantasia", coverImage: "https://m.media-amazon.com/images/I/81-0g+c+u+L._SL1500_.jpg", pdfUrl: "#" },
+            { id: 64, title: "Caixa de Pássaros", author: "Josh Malerman", genre: "Terror", coverImage: "https://m.media-amazon.com/images/I/81y+v+Q+k+L._SL1500_.jpg", pdfUrl: "https://notamanuscrita.com/wp-content/uploads/2015/07/visto-malerman-caixa-de-passaros.pdf" },
+            { id: 65, title: "O Ladrão de Raios", author: "Rick Riordan", genre: "Fantasia Juvenil", coverImage: "https://m.media-amazon.com/images/I/91G+0N+3+OL._SL1500_.jpg", pdfUrl: "https://clubdelivros.wordpress.com/wp-content/uploads/2013/09/percy-jackson-e-os-olimpianos_-o-ladrao-de-raios-vol-1-rick-riordan.pdf" },
+            { id: 66, title: "Breves Respostas para Grandes Questões", author: "Stephen Hawking", genre: "Divulgação Científica", coverImage: "https://m.media-amazon.com/images/I/81M+Z+Q+k+L.jpg", pdfUrl: "https://cdn.bookey.app/files/pdf/book/pt/breves-respostas-para-grandes-quest%C3%B5es.pdf" },
+            { id: 67, title: "O Cemitério", author: "Stephen King", genre: "Terror", coverImage: "https://m.media-amazon.com/images/I/81z+1+9+L.jpg", pdfUrl: "https://kbook.com.br/wp-content/uploads/2016/08/O-Cemiterio-Stephen-King.pdf" },
+            { id: 68, title: "As Mil e Uma Noites", author: "Vários", genre: "Fantasia", coverImage: "https://m.media-amazon.com/images/I/81o+9+7+L._SL1500_.jpg", pdfUrl: "https://preprints.readingroo.ms/jansen/jansen-Mil-E-Uma-Noites.pdf" },
+            { id: 69, title: "A Insustentável Leveza do Ser", author: "Milan Kundera", genre: "Drama", coverImage: "https://m.media-amazon.com/images/I/81e+4+L._SL1500_.jpg", pdfUrl: "https://kbook.com.br/wp-content/files_mf/ainsustentavellevezadosermilankundera.pdf" },
+            { id: 70, title: "O Estrangeiro", author: "Albert Camus", genre: "Clássico", coverImage: "https://m.media-amazon.com/images/I/81t+6+L.jpg", pdfUrl: "https://leonayres.com.br/wp-content/uploads/2013/10/CAMUS-Albert-O-Estrangeiro.pdf" },
+            { id: 71, title: "O Alquimista", author: "Paulo Coelho", genre: "Auto ajuda", coverImage: "https://m.media-amazon.com/images/I/81z+4+L._SL1500_.jpg", pdfUrl: "https://www.somostodosum.com.br/clube/ebooks/paulo%20coelho%20-%20o%20alquimista.pdf" },
+            { id: 72, title: "A Hospedeira", author: "Stephenie Meyer", genre: "Ficção Científica", coverImage: "https://m.media-amazon.com/images/I/81u+6+L.jpg", pdfUrl: "https://apenasumahistoria14.wordpress.com/wp-content/uploads/2014/11/a-hospedeira-stephenie-meyer.pdf" },
+            { id: 73, title: "Histórias Extraordinárias", author: "Edgar Allan Poe", genre: "Mistério", coverImage: "https://m.media-amazon.com/images/I/81q+2+L.jpg", pdfUrl: "https://drive.google.com/drive/folders/1ehWno7i0HTXHITcARHwi97EdADdjLN8b" },
+            { id: 74, title: "A Biblioteca da Meia-Noite", author: "Matt Haig", genre: "Drama", coverImage: "https://m.media-amazon.com/images/I/81h+3+L._SL1500_.jpg", pdfUrl: "https://drive.google.com/drive/folders/1ehWno7i0HTXHITcARHwi97EdADdjLN8b" },
+            { id: 75, title: "Mitologia Nórdica", author: "Neil Gaiman", genre: "Fantasia", coverImage: "https://m.media-amazon.com/images/I/81k+5+L.jpg", pdfUrl: "https://static.tumblr.com/jh0avtj/Jo7ooq7ty/mitologia_nordica_-_neil_gaiman.pdf" },
+            { id: 76, title: "O Morro dos Ventos Uivantes", author: "Emily Brontë", genre: "Romance", coverImage: "https://m.media-amazon.com/images/I/81o+2+L._SL1500_.jpg", pdfUrl: "https://www.ufmg.br/centrocultural/wp-content/uploads/2020/05/1-O-Morro-Dos-Ventos-Uivantes-Emily-Bront%C3%AB.pdf" },
+            { id: 77, title: "Siddhartha", author: "Hermann Hesse", genre: "Clássico", coverImage: "https://m.media-amazon.com/images/I/81r+4+L.jpg", pdfUrl: "https://www.sosergipe.com.br/wp-content/uploads/2023/05/Sidarta.pdf" },
+            { id: 78, title: "O Nome da Rosa", author: "Umberto Eco", genre: "Mistério", coverImage: "https://m.media-amazon.com/images/I/81v+9+L.jpg", pdfUrl: "https://estdaliteratura.wordpress.com/wp-content/uploads/2017/05/lit-4-o-nome-da-rosa-umberto-eco1.pdf" },
+            { id: 79, title: "Memórias de uma Gueixa", author: "Arthur Golden", genre: "Drama", coverImage: "https://m.media-amazon.com/images/I/91p+3+L._SL1500_.jpg", pdfUrl: "https://cdn.bookey.app/files/pdf/book/pt/mem%C3%B3rias-de-uma-gueixa.pdf" },
+            { id: 80, title: "Blade Runner", author: "Philip K. Dick", genre: "Ficção Científica", coverImage: "https://m.media-amazon.com/images/I/81m+9+L._SL1500_.jpg", pdfUrl: "https://kbook.com.br/wp-content/uploads/2018/12/AndroidesSonhamComOvelhasEletricas.pdf" },
+            { id: 81, title: "A Menina Submersa", author: "Caitlín R. Kiernan", genre: "Terror", coverImage: "https://m.media-amazon.com/images/I/81z+7+L._SL1500_.jpg", pdfUrl: "#" },
+            { id: 82, title: "Cidades de Papel", author: "John Green", genre: "Romance Juvenil", coverImage: "https://m.media-amazon.com/images/I/81t+8+L.jpg", pdfUrl: "https://ensaiosflutuantes.wordpress.com/wp-content/uploads/2015/05/cidades-de-papel-john-green-1.pdf" },
+            { id: 83, title: "A História Sem Fim", author: "Michael Ende", genre: "Fantasia Juvenil", coverImage: "https://m.media-amazon.com/images/I/91q+4+L._SL1500_.jpg", pdfUrl: "https://mirante1.wordpress.com/wp-content/uploads/2011/08/michael-ende-a-histc3b3ria-sem-fim.pdf" },
+            { id: 84, title: "O Capital", author: "Karl Marx", genre: "Sociologia", coverImage: "https://m.media-amazon.com/images/I/81n+2+L.jpg", pdfUrl: "https://redept.com.br/uploads/biblioteca/MARX,_Karl._O_Capital_._vol_I_._Boitempo_._.pdf" },
+            { id: 85, title: "O Perfume", author: "Patrick Süskind", genre: "Thriller", coverImage: "https://m.media-amazon.com/images/I/81w+4+L.jpg", pdfUrl: "https://cdn.bookey.app/files/pdf/book/pt/o-perfume.pdf" },
+            { id: 86, title: "O Cálice dos Deuses", author: "Rick Riordan", genre: "Fantasia Juvenil", coverImage: "https://m.media-amazon.com/images/I/91r+5+L.jpg", pdfUrl: "#" },
+            { id: 87, title: "O Caçador de Pipas", author: "Khaled Hosseini", genre: "Drama", coverImage: "https://m.media-amazon.com/images/I/81v+6+L.jpg", pdfUrl: "http://www.promovesetelagoas.com.br/colegio/arquivos_up/documentos/4ea7e667ce9d3202558d98306d3ab7b9.pdf" },
+            { id: 88, title: "Revolução e Utopia", author: "Vários Autores", genre: "História", coverImage: "https://m.media-amazon.com/images/I/81y+3+L.jpg", pdfUrl: "#" },
+            { id: 89, title: "A Culpa é das Estrelas", author: "John Green", genre: "Romance Juvenil", coverImage: "https://m.media-amazon.com/images/I/81u+7+L.jpg", pdfUrl: "https://worldfabibooks.wordpress.com/wp-content/uploads/2013/07/a-culpa-c3a9-das-estrelas-john-green.pdf" },
+            { id: 90, title: "O Tempo e o Vento", author: "Erico Verissimo", genre: "Clássico", coverImage: "https://m.media-amazon.com/images/I/81q+1+L.jpg", pdfUrl: "https://www.companhiadasletras.com.br/trechos/13647.pdf" },
+            { id: 91, title: "Boxe: A Luta pela Vida", author: "Mike Tyson", genre: "Biográfico", coverImage: "https://m.media-amazon.com/images/I/71uX+J7+5pL.jpg", pdfUrl: "#" },
+            { id: 92, title: "A Batalha do Apocalipse", author: "Eduardo Spohr", genre: "Fantasia", coverImage: "https://m.media-amazon.com/images/I/91t+2+L.jpg", pdfUrl: "https://mail.elginbematech.com.br/processobook/Book%20Bematech%20Fev-2020/Bematech/Leitura%20Online/Livros/50-%20A%20Batalha%20do%20Apocalipse.pdf" },
+            { id: 93, title: "O Exorcista", author: "William Peter Blatty", genre: "Terror", coverImage: "https://m.media-amazon.com/images/I/91z+6+L.jpg", pdfUrl: "https://cdn.bookey.app/files/pdf/book/pt/o-exorcista.pdf" },
+            { id: 94, title: "O Milagre da Manhã", author: "Hal Elrod", genre: "Auto ajuda", coverImage: "https://m.media-amazon.com/images/I/71r+3+L.jpg", pdfUrl: "https://www.institutodemissao.org.br/wp-content/uploads/2020/01/O-Milagre-Da-Manh%C3%A3-Hal-Elrod.pdf" },
+            { id: 95, title: "It: A Coisa", author: "Stephen King", genre: "Terror", coverImage: "https://m.media-amazon.com/images/I/91+1SUO3vUL._SL1500_.jpg", pdfUrl: "https://static.tumblr.com/jh0avtj/GIgowv0gw/it__a_coisa_-_stephen_king.pdf" },
+            { id: 96, title: "O Mágico de Oz", author: "L. Frank Baum", genre: "Fantasia Juvenil", coverImage: "https://m.media-amazon.com/images/I/81G+4+L.jpg", pdfUrl: "#" },
+            { id: 97, title: "O Conto da Aia", author: "Margaret Atwood", genre: "Ficção Científica", coverImage: "https://m.media-amazon.com/images/I/81p+7+L.jpg", pdfUrl: "https://moodle.ibiruba.ifrs.edu.br/pluginfile.php/25041/mod_resource/content/1/O-Conto-da-Aia-Margaret-Atwood.pdf" },
+            { id: 98, title: "Inferno", author: "Dan Brown", genre: "Mistério", coverImage: "https://m.media-amazon.com/images/I/81s+1+L.jpg", pdfUrl: "https://cabana-on.com/Ler/wp-content/uploads/2017/08/Inferno-Uma-nova-aventura-de-Robert-La-Dan-Brown.pdf" },
+            { id: 99, title: "A Cabana", author: "William P. Young", genre: "Drama", coverImage: "https://m.media-amazon.com/images/I/81x+8+L.jpg", pdfUrl: "https://mail.elginbematech.com.br/processobook/Book%20Bematech%20Fev-2020/Bematech/Leitura%20Online/Livros/64-%20A%20Cabana.pdf" },
+            { id: 100, title: "O Processo", author: "Franz Kafka", genre: "Clássico", coverImage: "https://m.media-amazon.com/images/I/81y+5+L.jpg", pdfUrl: "https://100melhoreslivros.wordpress.com/wp-content/uploads/2009/12/franz-kafka-o-processo.pdf" }
         ];
 
-
-        // Selecionando os elementos do HTML que vamos manipular
+        // --- MANIPULAÇÃO DO DOM ---
         const bookGrid = document.getElementById('bookGrid');
         const searchInput = document.getElementById('searchInput');
         const genreFilterSelect = document.getElementById('genreFilter');
         const noResultsMessage = document.getElementById('noResultsMessage');
+        const clearSearchBtn = document.getElementById('clearSearchBtn');
+        const bookModal = document.getElementById('bookModal');
 
-        // Variáveis para guardar o estado atual dos filtros
-        let currentSearchTerm = '';
-        let currentGenre = 'Todos';
+        // --- SISTEMA DE MODAL E AVALIAÇÕES ---
 
-        /**
-         * Função principal para renderizar os livros na tela.
-         * Ela recebe uma lista de livros e cria os cards para cada um.
-         */
+        function getAverageRating(id) {
+            const reviews = libraryReviews[id] || [];
+            if (reviews.length === 0) return 0;
+            const sum = reviews.reduce((acc, curr) => acc + parseInt(curr.rating), 0);
+            return (sum / reviews.length).toFixed(1);
+        }
+
+        // Renderiza os livros na tela inicial
         function renderBooks(booksToRender) {
-            // Limpa a grade de livros antes de adicionar os novos
             bookGrid.innerHTML = '';
-
-            // Verifica se a lista de livros para renderizar está vazia
             if (booksToRender.length === 0) {
                 bookGrid.classList.add('hidden');
                 noResultsMessage.classList.remove('hidden');
             } else {
                 bookGrid.classList.remove('hidden');
                 noResultsMessage.classList.add('hidden');
-            
+                
                 booksToRender.forEach(book => {
-                    const bookCard = `
-                        <a href="${book.pdfUrl}" target="_blank" class="group block bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-cyan-500/50 transition-all duration-300 transform hover:-translate-y-2">
+                    const avgRating = getAverageRating(book.id);
+                    const hasRating = avgRating > 0;
+
+                    const bookCard = document.createElement('div');
+                    // Mudança: Agora é um DIV com onclick para abrir o Modal
+                    bookCard.innerHTML = `
+                        <div onclick="openBookModal(${book.id})" class="cursor-pointer group block h-full bg-gray-800 rounded-xl border border-gray-700 overflow-hidden shadow-lg hover:shadow-cyan-500/50 transition-all duration-300 transform hover:-translate-y-1 hover:border-cyan-500 relative">
                             <div class="relative">
-                                <img src="${book.coverImage}" alt="Capa do livro ${book.title}" class="w-full h-auto object-cover aspect-[2/3]" onerror="this.onerror=null;this.src='https://placehold.co/300x450/1F2937/FFFFFF?text=Imagem+N%C3%A3o+Encontrada';">
-                                <div class="absolute inset-0 bg-black bg-opacity-50 group-hover:bg-opacity-20 transition-all duration-300"></div>
+                                <img src="${book.coverImage}" alt="${book.title}" class="w-full book-cover" onerror="this.onerror=null;this.src='https://placehold.co/300x450/1F2937/FFFFFF?text=Capa+Indisponível';">
+                                <div class="absolute inset-0 bg-black bg-opacity-40 group-hover:bg-opacity-10 transition-all duration-300"></div>
+                                ${hasRating ? `<div class="absolute top-2 right-2 bg-yellow-500 text-black text-xs font-bold px-2 py-1 rounded-full shadow flex items-center gap-1">★ ${avgRating}</div>` : ''}
                             </div>
                             <div class="p-4">
-                                <h3 class="font-bold text-lg truncate text-gray-100">${book.title}</h3>
-                                <p class="text-sm text-gray-400">${book.author}</p>
+                                <h3 class="font-bold text-base md:text-lg truncate text-gray-100 mb-1">${book.title}</h3>
+                                <p class="text-xs md:text-sm text-gray-400 font-medium">${book.author}</p>
+                                <span class="inline-block mt-2 px-2 py-0.5 text-xs font-semibold text-cyan-200 bg-cyan-700/30 rounded-full">${book.genre}</span>
                             </div>
-                        </a>
+                        </div>
                     `;
-                    bookGrid.innerHTML += bookCard;
+                    bookGrid.appendChild(bookCard);
                 });
             }
         }
-    
-        /**
-         * Função para criar e renderizar as opções do dropdown de gênero.
-         */
+
+        function openBookModal(id) {
+            const book = books.find(b => b.id === id);
+            if(!book) return;
+
+            currentBookId = id;
+            
+            // Popula Modal
+            document.getElementById('modalBookImage').src = book.coverImage;
+            document.getElementById('modalBookTitle').textContent = book.title;
+            document.getElementById('modalBookAuthor').textContent = book.author;
+            document.getElementById('modalBookGenre').textContent = book.genre;
+            document.getElementById('modalBookLink').href = book.pdfUrl;
+
+            // Limpa inputs
+            document.getElementById('commentInput').value = '';
+            document.querySelectorAll('input[name="rating"]').forEach(r => r.checked = false);
+
+            renderCommentsList();
+            bookModal.classList.remove('hidden-section');
+        }
+
+        function closeModal() {
+            bookModal.classList.add('hidden-section');
+            currentBookId = null;
+            updateDisplay(); // Atualiza a grid principal caso tenha nova nota média
+        }
+
+        function submitReview() {
+            if(!currentBookId || !currentRA) return;
+
+            const text = document.getElementById('commentInput').value.trim();
+            const ratingInput = document.querySelector('input[name="rating"]:checked');
+            const rating = ratingInput ? ratingInput.value : 0;
+
+            if (!text && rating === 0) {
+                alert("Por favor, dê uma nota ou escreva um comentário.");
+                return;
+            }
+
+            // Cria nova avaliação
+            const newReview = {
+                ra: currentRA,
+                text: text,
+                rating: rating,
+                date: new Date().toLocaleDateString('pt-BR')
+            };
+
+            // Salva no LocalStorage
+            if (!libraryReviews[currentBookId]) {
+                libraryReviews[currentBookId] = [];
+            }
+            libraryReviews[currentBookId].unshift(newReview); // Adiciona no começo
+            localStorage.setItem('libraryReviews', JSON.stringify(libraryReviews));
+
+            // Feedback visual e limpeza
+            document.getElementById('commentInput').value = '';
+            document.querySelectorAll('input[name="rating"]').forEach(r => r.checked = false);
+            
+            renderCommentsList();
+        }
+
+        function renderCommentsList() {
+            const listEl = document.getElementById('commentsList');
+            const reviews = libraryReviews[currentBookId] || [];
+            
+            document.getElementById('commentCount').innerText = reviews.length;
+            listEl.innerHTML = '';
+
+            if (reviews.length === 0) {
+                listEl.innerHTML = '<p class="text-gray-500 italic text-sm">Seja o primeiro a avaliar este livro.</p>';
+                return;
+            }
+
+            reviews.forEach(review => {
+                // Mascara o RA para privacidade (Ex: Estudante 7890)
+                const userDisplay = `Estudante ${review.ra.slice(-4)}`;
+                const stars = '★'.repeat(review.rating) + '☆'.repeat(5 - review.rating);
+                
+                const item = document.createElement('div');
+                item.className = 'bg-gray-700/50 p-3 rounded-lg border-l-4 border-cyan-500';
+                item.innerHTML = `
+                    <div class="flex justify-between items-start mb-1">
+                        <span class="font-bold text-cyan-300 text-sm">${userDisplay}</span>
+                        <span class="text-xs text-gray-400">${review.date}</span>
+                    </div>
+                    ${review.rating > 0 ? `<div class="text-yellow-400 text-sm mb-1 tracking-widest">${stars}</div>` : ''}
+                    ${review.text ? `<p class="text-gray-200 text-sm">${review.text}</p>` : ''}
+                `;
+                listEl.appendChild(item);
+            });
+        }
+
+        // --- FILTROS E INICIALIZAÇÃO (Padrão) ---
         function renderGenreFilterOptions() {
-            // Extrai todos os gêneros únicos da lista de livros
-            const genres = ['Todos', ...new Set(books.map(book => book.genre))];
-        
+            genreFilterSelect.innerHTML = '';
+            const genres = ['Todos', ...new Set(books.map(book => book.genre))].sort();
             genres.forEach(genre => {
                 const option = document.createElement('option');
                 option.textContent = genre;
                 option.value = genre;
-                if (genre === 'Todos') {
-                    option.selected = true;
-                }
+                if (genre === 'Todos') option.selected = true;
                 genreFilterSelect.appendChild(option);
             });
         }
-    
-        /**
-         * Função central que filtra os livros com base na pesquisa e no gênero selecionado.
-         */
+
         function updateDisplay() {
             let filteredBooks = books;
+            let currentGenre = genreFilterSelect.value;
+            let searchTerm = searchInput.value;
 
-            // 1. Filtrar por gênero
-            if (currentGenre !== 'Todos') {
-                filteredBooks = filteredBooks.filter(book => book.genre === currentGenre);
+            if (currentGenre !== 'Todos') filteredBooks = filteredBooks.filter(book => book.genre === currentGenre);
+            if (searchTerm) {
+                const normalize = (text) => text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                const normSearch = normalize(searchTerm);
+                filteredBooks = filteredBooks.filter(book => normalize(book.title).includes(normSearch) || normalize(book.author).includes(normSearch));
             }
-
-            // 2. Filtrar pelo termo de pesquisa (no título ou autor)
-            if (currentSearchTerm) {
-                const lowerCaseSearchTerm = currentSearchTerm.toLowerCase();
-                filteredBooks = filteredBooks.filter(book =>
-                    book.title.toLowerCase().includes(lowerCaseSearchTerm) ||
-                    book.author.toLowerCase().includes(lowerCaseSearchTerm)
-                );
-            }
-
-            // Renderiza os livros que passaram por todos os filtros
             renderBooks(filteredBooks);
         }
 
-        // Adiciona os eventos para a barra de pesquisa e o dropdown de gênero
-        searchInput.addEventListener('input', (e) => {
-            currentSearchTerm = e.target.value;
+        searchInput.addEventListener('input', () => {
+            clearSearchBtn.classList.toggle('hidden', searchInput.value.length === 0);
             updateDisplay();
         });
-
-        genreFilterSelect.addEventListener('change', (e) => {
-            currentGenre = e.target.value;
+        clearSearchBtn.addEventListener('click', () => {
+            searchInput.value = '';
+            clearSearchBtn.classList.add('hidden');
             updateDisplay();
         });
+        genreFilterSelect.addEventListener('change', updateDisplay);
 
-        // Função que é executada quando a página termina de carregar
         document.addEventListener('DOMContentLoaded', () => {
             renderGenreFilterOptions();
-            updateDisplay(); // Renderiza todos os livros inicialmente
+            // Inicialmente não renderiza livros até logar, mas o CSS controla visibilidade das seções
         });
-
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
